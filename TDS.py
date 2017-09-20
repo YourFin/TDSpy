@@ -15,18 +15,20 @@ class Glue:
         else:
             raise ValueError('parent needs to be of type glue')
 
-    @classmethod
-    def create_child(parent, labelSuffix, strength=None):
+    def create_child(self, labelSuffix, strength=None):
+        ret = None
         if isinstance(parent, Glue) and isinstance(labelSuffix, str):
-            parent.children += self
             if strength is None:
-                return Glue(parent.label + labelSuffix, parent.strength, parent)
+                ret = Glue(parent.label + labelSuffix, parent.strength, parent)
             elif isinstance(strength, int):
-                return Glue(parent.label + labelSuffix, strength, parent)
+                ret = Glue(parent.label + labelSuffix, strength, parent)
             else:
                 raise ValueError('Strength must be an integer.')
         else:
             raise ValueError('Invalid input for Glue constructor')
+
+        self.children += ret
+        return ret
             
     blank_glue = Glue(1, "")
 
@@ -35,20 +37,29 @@ class Glue:
             
 class Tile:
     """A pythonic representation of TAS tiles"""
-    def __init__(self, tilename, color=[255, 255, 255], northGlue=Glue.blank_glue, eastGlue=Glue.blank_glue, southGlue=Glue.blank_glue, westGlue=Glue.blank_glue):
-        self.glues = [northGlue, eastGlue, southGlue, westGlue]
-        self.tilename = tilename
-        self.color = color
 
-    def __init__(self, tilename, color=[255, 255, 255], glues=([Glue.blank_glue] * 4)):
+    def __init__(self, tilename, color=[255, 255, 255], glues=([Glue.blank_glue] * 4), parent=None):
         self.glues = glues
         self.tilename = tilename
         self.color = color
+        self.parent = parent
 
-    def __init__(self, parent, tilename_suffix="", color_dif=[0,0,0]):
-        self.glues = parent.glues
-        self.color = [(x + y) % 255 for x, y in zip(parent.color, color)]
-        self.tilename = parent.tilename + tilename_suffix
+    @classmethod
+    def create_compass(cls, tilename, color=[255, 255, 255], northGlue=Glue.blank_glue, eastGlue=Glue.blank_glue, southGlue=Glue.blank_glue, westGlue=Glue.blank_glue):
+        cls(tilename, color, [northGlue, eastGlue, southGlue, westGlue])
+
+    def create_child(self, tilename_suffix="", color_dif=[0,0,0], northGlue=None, eastGlue=None, southGlue=None, westGlue=None):
+        glues = self.glues
+        for glue, index in enumerate([northGlue, eastGlue, southGlue, westGlue]):
+            if glue is not None and isinstance(glue, Glue):
+                glues[index] = glue
+        return Tile(self.tilename + tilename_suffix,
+                    [(x + y) % 255 for x, y in zip(self.color, color)],
+                    glues,
+                    self)
+
+    def __str__(self):
+        return "{0}: "
 
 class TAS:
     def __init__(self):

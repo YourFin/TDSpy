@@ -12,6 +12,7 @@ Constructor: `Glue(str label, int strength, optional Glue parent)`
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new Glue with label `label`, strength `strength`
 	
+
 `create_child(str labelSuffix, optional int strength)`
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new Glue of name `{label}{labelSuffix}` as a child of `self`. Default strength is that of the parent.

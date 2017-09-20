@@ -32,4 +32,15 @@ Constructor: `Tile(str tilename, optional list(int) color, optional list(Glue) g
 
 `Tile create_child(optional str tilenameSuffix, optional list(int) colorDif, optional Glue northGlue, optional Glue eastGlue, optional Glue southGlue, optional Glue westGlue)`
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new `Tile` as a child of the current
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new `Tile` of name `{tilename}{tilenameSuffix}`as a child of `self`. `colorDif` is added to the parent's color, and the glues defualt to the parent's.  
+
+#### Variables:
+
+`glues`: A `list(Glue)` that contains the glues on the side of the tile. N:0, E:1, S:2, W:4.
+
+`tilename`: The color of the tile in RGB format, as a list of integers.
+
+`parent`: The tile which this tile is defined relative to. 
+
+`children`: A list of tiles defined relative to this tile
+

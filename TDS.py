@@ -51,7 +51,7 @@ class Tile:
     def create_compass(cls, tilename, color=[255, 255, 255], northGlue=blank_glue, eastGlue=blank_glue, southGlue=blank_glue, westGlue=blank_glue):
         cls(tilename, color, [northGlue, eastGlue, southGlue, westGlue])
 
-    def create_child(self, tilename_suffix="", color_dif=[0,0,0], northGlue=None, eastGlue=None, southGlue=None, westGlue=None):
+    def create_child(self, tilenameSuffix="", colorDif=[0,0,0], northGlue=None, eastGlue=None, southGlue=None, westGlue=None):
         glues = self.glues
         for glue, index in enumerate([northGlue, eastGlue, southGlue, westGlue]):
             if glue is not None and isinstance(glue, Glue):

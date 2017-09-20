@@ -21,7 +21,7 @@ Constructor: `Glue(str label, int strength, optional Glue parent)`
 
 #### Functions:
 
-Constructor: `Tile(str tilename, optional list(int) color, optional list(Glue) glues, optional Tile parent)`
+Constructor: `Tile(str tilename, optional list(int) color, optional list(Glue) glues, optional Tile parent)`  
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new `Tile` with name `tilename`. Defaults to white, blank glues, and no parent.
 

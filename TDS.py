@@ -2,33 +2,40 @@
 
 class Glue:
     """A TAS side glue"""
-    def __init__(self, strength, label):
+    def __init__(self, label, strength, parent=None):
         if isinstance(strength, int) and isinstance(label, str):
-            self.parent = None
             self.strength = strength
             self.label = label
+            self.children = []
         else:
             raise ValueError('Invalid input for Glue')
 
-    def __init__(self, parent, labelSuffix, strength=None):
-        if isinstance(parent, Glue) and isinstance(labelSuffix, str):
+        if parent is None or isinstance(parent, Glue):
             self.parent = parent
-            self.label = parent.label + " " + labelSuffix
+        else:
+            raise ValueError('parent needs to be of type glue')
 
+    @classmethod
+    def create_child(parent, labelSuffix, strength=None):
+        if isinstance(parent, Glue) and isinstance(labelSuffix, str):
+            parent.children += self
             if strength is None:
-                self.strength = parent.strength
+                return Glue(parent.label + labelSuffix, parent.strength, parent)
             elif isinstance(strength, int):
-                self.strength = strength
+                return Glue(parent.label + labelSuffix, strength, parent)
             else:
                 raise ValueError('Strength must be an integer.')
         else:
             raise ValueError('Invalid input for Glue constructor')
             
     blank_glue = Glue(1, "")
+
+    def __str__(self):
+        return "{0}: {1}".format(label, strength)
             
 class Tile:
     """A pythonic representation of TAS tiles"""
-    def __init__(self, tilename, color=(255, 255, 255), northGlue=Glue.blank_glue, eastGlue=Glue.blank_glue, southGlue=Glue.blank_glue, westGlue=Glue.blank_glue):
+    def __init__(self, tilename, color=[255, 255, 255], northGlue=Glue.blank_glue, eastGlue=Glue.blank_glue, southGlue=Glue.blank_glue, westGlue=Glue.blank_glue):
         self.glues = [northGlue, eastGlue, southGlue, westGlue]
         self.tilename = tilename
         self.color = color

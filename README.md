@@ -8,6 +8,16 @@ This library creates three classes: `Tile`s, `Glue`s, and `TAS`'s. The `Tile` an
 
 ### Glue
 
+#### Variables:
+
+`strength`: The `int` strength of this glue
+
+`label`: The `str` name of this glue
+
+`parent`: The `Glue` that this glue is derived from
+
+`children`: The `list(Glue)` of all children of this glue.
+
 #### Functions:
 
 Constructor: `Glue(str label, int strength, optional Glue parent)`
@@ -19,6 +29,15 @@ Constructor: `Glue(str label, int strength, optional Glue parent)`
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new Glue of name `{label}{labelSuffix}` as a child of `self`. Default strength is that of the parent.
 	
 ### Tile
+#### Variables:
+
+`glues`: A `list(Glue)` that contains the glues on the side of the tile. N:0, E:1, S:2, W:4.
+
+`tilename`: The color of the tile in RGB format, as a list of integers.
+
+`parent`: The `Tile` which this tile is defined relative to. 
+
+`children`: A `list(tile)` with all tiles defined relative to this tile
 
 #### Functions:
 
@@ -34,13 +53,5 @@ Constructor: `Tile(str tilename, optional list(int) color, optional list(Glue) g
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new `Tile` of name `{tilename}{tilenameSuffix}`as a child of `self`. `colorDif` is added to the parent's color, and the glues defualt to the parent's.  
 
-#### Variables:
-
-`glues`: A `list(Glue)` that contains the glues on the side of the tile. N:0, E:1, S:2, W:4.
-
-`tilename`: The color of the tile in RGB format, as a list of integers.
-
-`parent`: The tile which this tile is defined relative to. 
-
-`children`: A list of tiles defined relative to this tile
-
+### TAS
+The `TAS` class is a subclass of the built-in `dict` class, and as such any operation that can be preformed on a dict can be preformed on a 

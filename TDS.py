@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import textwrap
+
 class Glue:
     """A TAS side glue"""
     def __init__(self, label, strength, parent=None):
@@ -29,23 +31,24 @@ class Glue:
 
         self.children += ret
         return ret
-            
-    blank_glue = Glue(1, "")
 
     def __str__(self):
-        return "{0}: {1}".format(label, strength)
+        return ("Glue {0}: {1}".format(self.label, self.strength))
             
+blank_glue = Glue("", 1)
+
 class Tile:
     """A pythonic representation of TAS tiles"""
 
-    def __init__(self, tilename, color=[255, 255, 255], glues=([Glue.blank_glue] * 4), parent=None):
+    def __init__(self, tilename, color=[255, 255, 255], glues=([blank_glue] * 4), parent=None):
         self.glues = glues
         self.tilename = tilename
         self.color = color
         self.parent = parent
+        self.children = []
 
     @classmethod
-    def create_compass(cls, tilename, color=[255, 255, 255], northGlue=Glue.blank_glue, eastGlue=Glue.blank_glue, southGlue=Glue.blank_glue, westGlue=Glue.blank_glue):
+    def create_compass(cls, tilename, color=[255, 255, 255], northGlue=blank_glue, eastGlue=blank_glue, southGlue=blank_glue, westGlue=blank_glue):
         cls(tilename, color, [northGlue, eastGlue, southGlue, westGlue])
 
     def create_child(self, tilename_suffix="", color_dif=[0,0,0], northGlue=None, eastGlue=None, southGlue=None, westGlue=None):
@@ -61,17 +64,17 @@ class Tile:
     def __str__(self):
         return "{0}: "
 
-class TAS:
+class TAS(dict):
     def __init__(self):
-        self.tiles = {}
+        super()
 
     def addTile(self, tile, label=None):
         """Add a tile to the TAS. Labels must be unique. Defaults to tile name"""
         if label is None:
             label = tile.tilename
-        if label in self.tiles:
+        if label in self:
             raise ValueError('Tile labes must be unique')
-        self.tiles[label] = tile
+        self.__setitem__(label, tile)
 
     tilestring = textwrap.dedent("""\
     TILENAME {tile_name}
@@ -93,7 +96,7 @@ class TAS:
     def printTiles(self):
         """Print out the tileset in a tds friendly format"""
         output = ""
-        for label, tile in self.tiles.items():
+        for label, tile in zip(self.keys(), self.values()):
             output += tiletext.format(
                 tilename=tile.tilename, label=label,
                 north_label=tile.glues[0].label, north_glue_strength=tile.glues[0].strength,

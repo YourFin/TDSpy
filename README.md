@@ -10,9 +10,9 @@ This library creates three classes: `Tile`s, `Glue`s, and `TAS`'s. The `Tile` an
 
 Constructor: `Glue(str label, int strength, optional Glue parent)`
 
-	>Create a new Glue with label `label`, strength `strength`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new Glue with label `label`, strength `strength`
 	
 `create_child(str labelSuffix, optional int strength)`
 
-	>Create a new Glue of name `{label}{labelSuffix}` as a child of `self`. Default strength is that of the parent.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new Glue of name `{label}{labelSuffix}` as a child of `self`. Default strength is that of the parent.
 	

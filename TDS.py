@@ -56,7 +56,7 @@ class Tile:
         cls(tilename, color, [northGlue, eastGlue, southGlue, westGlue])
 
     def create_child(self, tilenameSuffix="", colorDif=[0,0,0], northGlue=None, eastGlue=None, southGlue=None, westGlue=None, glues=[None, None, None, None]):
-        outglues = copy.deepcopy(self.glues)
+        outglues = copy.copy(self.glues)
         if glues.__len__() > 4:
             raise ValueError("glues is too long")
 

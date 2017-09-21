@@ -6,7 +6,9 @@ This software aims to provide a way of creating and manipulating Tile-Assembly s
 
 This library creates three classes: `Tile`s, `Glue`s, and `TAS`'s. The `Tile` and `Glue` classes are written such that they can easily be made to fit a hierarchical structure with inherited traits.
 
-### Glue
+## Documentation
+
+### Glue Class
 
 #### Variables:
 
@@ -28,7 +30,7 @@ Constructor: `Glue(str label, int strength, optional Glue parent)`
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new Glue of name `{label}{labelSuffix}` as a child of `self`. Default strength is that of the parent.
 	
-### Tile
+### Tile Class
 #### Variables:
 
 `glues`: A `list(Glue)` that contains the glues on the side of the tile. N:0, E:1, S:2, W:4.
@@ -53,5 +55,22 @@ Constructor: `Tile(str tilename, optional list(int) color, optional list(Glue) g
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new `Tile` of name `{tilename}{tilenameSuffix}`as a child of `self`. `colorDif` is added to the parent's color, and the glues defualt to the parent's.  
 
-### TAS
-The `TAS` class is a subclass of the built-in `dict` class, and as such any operation that can be preformed on a dict can be preformed on a 
+### TAS Class
+The `TAS` class is a subclass of the built-in `dict` class, and as such any operation that can be preformed on a dict can be preformed on a `TAS`. Keys to the dict are the labels in the ISU TAS software, as they must be unique in any given tileset.
+
+#### Variables:
+`tilestring`: The massive string used to convert to the `.tds` format.
+
+#### Functions:
+
+`void addTile(Tile tile, optional str label)`: A simple wrap around the dictionary add function that enforces adding uniquely labeled tiles, and provides a default label in the tile name.
+
+`str printTiles()`: Dumps the `.tds` representation of the tileset.
+
+`void printToFile(str path)`: Writes the tileset to the file at path. Overwrites, not appends
+
+
+## Licence
+Mit
+
+© 2017 Patrick Nuckolls

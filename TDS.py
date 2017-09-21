@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import textwrap
+import copy
 
 class Glue:
     """A TAS side glue"""
@@ -33,7 +34,10 @@ class Glue:
         return ret
 
     def __str__(self):
-        return ("Glue {0}: {1}".format(self.label, self.strength))
+        return ("Glue \"{0}\": {1}".format(self.label, self.strength))
+
+    def __repr__(self):
+        return "<" + self.__str__() + ">"
             
 blank_glue = Glue("", 1)
 
@@ -51,15 +55,31 @@ class Tile:
     def create_compass(cls, tilename, color=[255, 255, 255], northGlue=blank_glue, eastGlue=blank_glue, southGlue=blank_glue, westGlue=blank_glue):
         cls(tilename, color, [northGlue, eastGlue, southGlue, westGlue])
 
-    def create_child(self, tilenameSuffix="", colorDif=[0,0,0], northGlue=None, eastGlue=None, southGlue=None, westGlue=None):
-        glues = self.glues
-        for glue, index in enumerate([northGlue, eastGlue, southGlue, westGlue]):
+    def create_child(self, tilenameSuffix="", colorDif=[0,0,0], northGlue=None, eastGlue=None, southGlue=None, westGlue=None, glues=[None, None, None, None]):
+        outglues = copy.deepcopy(self.glues)
+        if glues.__len__() > 4:
+            raise ValueError("glues is too long")
+
+        for index, glue in enumerate(glues):
             if glue is not None and isinstance(glue, Glue):
-                glues[index] = glue
-        return Tile(self.tilename + tilename_suffix,
-                    [(x + y) % 255 for x, y in zip(self.color, color)],
-                    glues,
+                outglues[index] = glue
+        for index, glue in enumerate([northGlue, eastGlue, southGlue, westGlue]):
+            if glue is not None and isinstance(glue, Glue):
+                outglues[index] = glue
+
+        return Tile(self.tilename + tilenameSuffix,
+                    [(x + y) % 255 for x, y in zip(self.color, colorDif)],
+                    outglues,
                     self)
+
+    def rotate_tile(self, rotation, tilenameSuffix=None, colorDif=[0,0,0]):
+        if tilenameSuffix is None:
+            tilenameSuffix = self.tilename + "-rot" + str(rotation)
+
+        return self.create_child(tilenameSuffix, colorDif,
+                                 glues=[self.glues[(x - rotation) % 4]
+                                        for x in range(4)])
+
 
     def __str__(self):
         return "{0}: "
@@ -92,7 +112,7 @@ class TAS(dict):
     
     
     """)
-https://github.com/ruslo/hunter/archive/v0.19.71.tar.gi
+
     def printTiles(self):
         """Print out the tileset in a tds friendly format"""
         output = ""

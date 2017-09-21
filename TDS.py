@@ -20,17 +20,17 @@ class Glue:
 
     def create_child(self, labelSuffix, strength=None):
         ret = None
-        if isinstance(parent, Glue) and isinstance(labelSuffix, str):
+        if isinstance(labelSuffix, str):
             if strength is None:
-                ret = Glue(parent.label + labelSuffix, parent.strength, parent)
+                ret = Glue(self.label + labelSuffix, self.strength, self)
             elif isinstance(strength, int):
-                ret = Glue(parent.label + labelSuffix, strength, parent)
+                ret = Glue(self.label + labelSuffix, strength, self)
             else:
                 raise ValueError('Strength must be an integer.')
         else:
             raise ValueError('Invalid input for Glue constructor')
 
-        self.children += ret
+        self.children.append(ret)
         return ret
 
     def __str__(self):
@@ -53,7 +53,7 @@ class Tile:
 
     @classmethod
     def create_compass(cls, tilename, color=[255, 255, 255], northGlue=blank_glue, eastGlue=blank_glue, southGlue=blank_glue, westGlue=blank_glue):
-        cls(tilename, color, [northGlue, eastGlue, southGlue, westGlue])
+        return cls(tilename, color, [northGlue, eastGlue, southGlue, westGlue])
 
     def create_child(self, tilenameSuffix="", colorDif=[0,0,0], northGlue=None, eastGlue=None, southGlue=None, westGlue=None, glues=[None, None, None, None]):
         outglues = copy.copy(self.glues)
@@ -67,14 +67,17 @@ class Tile:
             if glue is not None and isinstance(glue, Glue):
                 outglues[index] = glue
 
-        return Tile(self.tilename + tilenameSuffix,
-                    [(x + y) % 255 for x, y in zip(self.color, colorDif)],
+        ret = Tile(self.tilename + tilenameSuffix,
+                    [(x + y) % 256 for x, y in zip(self.color, colorDif)],
                     outglues,
                     self)
 
+        self.children.append(ret)
+        return ret
+
     def rotate(self, rotation, tilenameSuffix=None, colorDif=[0,0,0]):
         if tilenameSuffix is None:
-            tilenameSuffix = self.tilename + "-rot" + str(rotation)
+            tilenameSuffix = "-rot" + str(rotation)
 
         return self.create_child(tilenameSuffix, colorDif,
                                  glues=[self.glues[(x - rotation) % 4]
@@ -99,12 +102,12 @@ class TAS(dict):
     tilestring = textwrap.dedent("""\
     TILENAME {tile_name}
     LABEL {label}
-    NORTHBIND {north_bind_strength}
-    EASTBIND {east_bind_strength}
-    SOUTHBIND (south_bind_strength)
-    WESTBIND {west_bind_strength}
+    NORTHBIND {north_glue_strength}
+    EASTBIND {east_glue_strength}
+    SOUTHBIND {south_glue_strength}
+    WESTBIND {west_glue_strength}
     NORTHLABEL {north_label}
-    EASTLABEL {east_label)}
+    EASTLABEL {east_label}
     SOUTHLABEL {south_label}
     WESTLABEL {west_label}
     TILECOLOR rgb({color_red}, {color_green}, {color_blue})
@@ -117,8 +120,8 @@ class TAS(dict):
         """Print out the tileset in a tds friendly format"""
         output = ""
         for label, tile in zip(self.keys(), self.values()):
-            output += tiletext.format(
-                tilename=tile.tilename, label=label,
+            output += TAS.tilestring.format(
+                tile_name=tile.tilename, label=label,
                 north_label=tile.glues[0].label, north_glue_strength=tile.glues[0].strength,
                 east_label=tile.glues[1].label,  east_glue_strength=tile.glues[1].strength,
                 south_label=tile.glues[2].label, south_glue_strength=tile.glues[2].strength,

@@ -4,7 +4,7 @@ This software aims to provide a way of creating and manipulating Tile-Assembly s
 
 ## Usage
 
-This library creates three classes: `Tile`s, `Glue`s, and `TAS`'s. The `Tile` and `Glue` classes are written such that they can easily be made to fit a hierarchical structure with inherited traits.
+This library creates three classes: `Tile`s, `Glue`s, and `TAS`'s. The `Tile` and `Glue` classes are written such that they can easily be made to fit a hierarchical structure with inherited traits. Pull requests welcome :)
 
 ## Documentation
 

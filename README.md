@@ -51,9 +51,13 @@ Constructor: `Tile(str tilename, optional list(int) color, optional list(Glue) g
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new `Tile` with name `tilename` using names instead of the list format.
 
-`Tile create_child(optional str tilenameSuffix, optional list(int) colorDif, optional Glue northGlue, optional Glue eastGlue, optional Glue southGlue, optional Glue westGlue)`
+`Tile create_child(optional str tilenameSuffix, optional list(int) colorDif, optional Glue northGlue, optional Glue eastGlue, optional Glue southGlue, optional Glue westGlue, optional list(Glue) glues)`
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new `Tile` of name `{tilename}{tilenameSuffix}`as a child of `self`. `colorDif` is added to the parent's color, and the glues defualt to the parent's.  
+
+`rotate(int rotation, optional str tilenameSuffix, optional list(int) colorDif)`:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new `Tile` that is a rotation of self 90*`rotation` degress clockwise. Default name is `{self.tilename}-rot{rotation}`.
 
 ### TAS Class
 The `TAS` class is a subclass of the built-in `dict` class, and as such any operation that can be preformed on a dict can be preformed on a `TAS`. Keys to the dict are the labels in the ISU TAS software, as they must be unique in any given tileset.

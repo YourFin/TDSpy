@@ -72,7 +72,7 @@ class Tile:
                     outglues,
                     self)
 
-    def rotate_tile(self, rotation, tilenameSuffix=None, colorDif=[0,0,0]):
+    def rotate(self, rotation, tilenameSuffix=None, colorDif=[0,0,0]):
         if tilenameSuffix is None:
             tilenameSuffix = self.tilename + "-rot" + str(rotation)
 

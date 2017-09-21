@@ -83,6 +83,25 @@ class Tile:
                                  glues=[self.glues[(x - rotation) % 4]
                                         for x in range(4)])
 
+    def horiz_flip(self, inPlace=True):
+        """flips the east and west glues. If inPlace is false, return a new child tile instead of modifying the current one."""
+        if inPlace:
+            proxy = self.glues[1]
+            self.glues[1] = self.glues[3]
+            self.glues[3] = proxy
+            return self
+        else:
+            return self.create_child("-horiz_flip", westGlue=self.glues[1], eastGlue=self.glues[3])
+
+    def vert_flip(self, inPlace=True):
+        """flips the north and south glues. If inPlace is false, return a new child tile instead of modifying the current one."""
+        if inPlace:
+            proxy = self.glues[0]
+            self.glues[0] = self.glues[2]
+            self.glues[2] = proxy
+            return self
+        else:
+            return self.create_child("-vert_flip", southGlue=self.glues[0], northGlue=self.glues[2])
 
     def __str__(self):
         return "{0}: "

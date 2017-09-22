@@ -59,6 +59,14 @@ Constructor: `Tile(str tilename, optional list(int) color, optional list(Glue) g
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new `Tile` that is a rotation of self 90*`rotation` degress clockwise. Default name is `{self.tilename}-rot{rotation}`.
 
+`Tile horiz_flip(bool inPlace=True`
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Modify the current tile to flip it horizontally. If `inPlace` is false, return a new `Tile` instead of modifying the current one.
+
+`Tile vert_flip(bool inPlace=True`
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Modify the current tile to flip it vertically. If `inPlace` is false, return a new `Tile` instead of modifying the current one.
+
 ### TAS Class
 The `TAS` class is a subclass of the built-in `dict` class, and as such any operation that can be preformed on a dict can be preformed on a `TAS`. Keys to the dict are the labels in the ISU TAS software, as they must be unique in any given tileset.
 

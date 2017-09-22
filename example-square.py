@@ -9,6 +9,7 @@ from sys import argv
 
 # Usage: ./example-square 20
 
+# Handle command line input
 if argv.__len__() == 1:
     square_len = 10
 elif argv.__len__() == 2:
@@ -17,35 +18,45 @@ else:
     print("Invalid command line arguments")
     exit(1)
 
+# Create TAS
 tas = TAS()
 
-side_glue_parent = Glue("Side", 2)
+# "Constants"
 dead_glue = Glue("", 0)
-side_glues = []
+blank_tile = Tile("Fill Tile", [255, 255, 255])
+
+# Create side glues
+glue_parent = Glue("Side", 2)
+glues = []
 
 for index in range(square_len):
-    side_glues.append(side_glue_parent.create_child("_" + str(index)))
+    glues.append(glue_parent.create_child("_" + str(index)))
+
 
 seed_tile = Tile.create_compass("Seed", [255, 0, 0],
-                                northGlue=side_glues[0],
-                                eastGlue=side_glues[0],
+                                northGlue=glues[0],
+                                eastGlue=glues[0],
                                 southGlue=dead_glue,
                                 westGlue=dead_glue)
 
-blank_tile = Tile("Fill Tile", [255, 255, 255])
+# Create side and bottom tiles
 side_tiles = []
 bottom_tiles = []
 
 for index in range(1, square_len):
     side_tiles.append(seed_tile.create_child("-side-" + str(index),
                                              northGlue=blank_glue,
-                                             eastGlue=side_glues[index],
-                                             westGlue=side_glues[index - 1]))
+                                             eastGlue=glues[index],
+                                             westGlue=glues[index - 1]))
+    # Bottom tiles are just side tiles but rotated clockwise 90
+    # and flipped, so create it as such
     bottom_tiles.append(side_tiles[index - 1].rotate(1).vert_flip(inPlace=False))
 
+# Add tiles to TAS
 for tile in side_tiles + bottom_tiles + [seed_tile]:
     tas.addTile(tile)
 
 tas.addTile(blank_tile, "fill")
 
+# Write out the resultant assembly to a file
 tas.printToFile("example-square.tds")

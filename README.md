@@ -2,6 +2,25 @@
 
 This software aims to provide a way of creating and manipulating Tile-Assembly systems in python 3, and exporting these objects to the `.tds` format used by the [ISU TAS](http://self-assembly.net/wiki/index.php?title=ISU_TAS) simulation software.
 
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [TDS.py](#tdspy)
+    - [Usage](#usage)
+    - [Documentation](#documentation)
+        - [Glue Class](#glue-class)
+            - [Variables:](#variables)
+            - [Functions:](#functions)
+        - [Tile Class](#tile-class)
+            - [Variables:](#variables-1)
+            - [Functions:](#functions-1)
+        - [TAS Class](#tas-class)
+            - [Variables:](#variables-2)
+            - [Functions:](#functions-2)
+    - [Licence](#licence)
+
+<!-- markdown-toc end -->
+
 ## Usage
 
 This library creates three classes: `Tile`s, `Glue`s, and `TAS`'s. The `Tile` and `Glue` classes are written such that they can easily be made to fit a hierarchical structure with inherited traits. Pull requests welcome :)

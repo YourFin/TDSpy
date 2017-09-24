@@ -23,7 +23,8 @@ def xor(horiz, vert):
 
 fill_tiles = Tile.create_func("fill", xor, [0,1])
 for tile in fill_tiles:
-    if tile.glues[0].label == "fill-1": tile.color = [255,0,0]
+    if tile.glues[0].label == "fill-1": 
+        tile.color = [255,0,0]
     tas.addTile(tile)
 
 tas.printToFile("example-sierpinski.tds")

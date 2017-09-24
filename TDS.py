@@ -55,6 +55,20 @@ class Tile:
     def create_compass(cls, tilename, color=[255, 255, 255], northGlue=blank_glue, eastGlue=blank_glue, southGlue=blank_glue, westGlue=blank_glue):
         return cls(tilename, color, [northGlue, eastGlue, southGlue, westGlue])
 
+    @classmethod
+    def create_func(cls, tilename, func, horizInputs, vertInputs=None,  color=[255, 255, 255]):
+        ret = []
+        if vertInputs is None: vertInputs = horizInputs
+        for horiz in horizInputs:
+            for vert in vertInputs:
+                horizOut, vertOut = func(horiz, vert)
+                ret.append(Tile(tilename+"-"+str(horiz)+"-"+str(vert), color,
+                                [Glue(tilename+"-"+str(vertOut), 1),
+                                 Glue(tilename+"-"+str(horizOut), 1),
+                                 Glue(tilename+"-"+str(vert), 1),
+                                 Glue(tilename+"-"+str(horiz), 1)]))
+        return ret
+
     def create_child(self, tilenameSuffix="", colorDif=[0,0,0], northGlue=None, eastGlue=None, southGlue=None, westGlue=None, glues=[None, None, None, None]):
         outglues = copy.copy(self.glues)
         if glues.__len__() > 4:

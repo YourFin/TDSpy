@@ -70,6 +70,10 @@ Constructor: `Tile(str tilename, optional list(int) color, optional list(Glue) g
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new `Tile` with name `tilename` using names instead of the list format.
 
+`Tile create_func(str tilename, function(a,a)->(a,a) func, list(a) horizInputs, optional list(a) vertInputs, optional list(int) color)`
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a list of tiles based on a given function. This method iterates through each combination horizontal and vertical inputs (using the same set for both if vertInputs is omitted), calls func(horiz, vert), and creates a tile (with all glues of strength 1) such that the inputs are fed through the west and south sides and the outputs are fed through the north and east sides. The function must return a tuple containing the horizontal and vertical output in that order. If other orientations, colorings, etc. are required, the tiles can be modified after this method is called.
+
 `Tile create_child(optional str tilenameSuffix, optional list(int) colorDif, optional Glue northGlue, optional Glue eastGlue, optional Glue southGlue, optional Glue westGlue, optional list(Glue) glues)`
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new `Tile` of name `{tilename}{tilenameSuffix}`as a child of `self`. `colorDif` is added to the parent's color, and the glues defualt to the parent's.  

@@ -2,6 +2,7 @@
 
 import textwrap
 import copy
+import re
 
 class Glue:
     """A TAS side glue"""
@@ -38,7 +39,7 @@ class Glue:
 
     def __repr__(self):
         return "<" + self.__str__() + ">"
-            
+
 blank_glue = Glue("", 1)
 
 class Tile:
@@ -129,7 +130,7 @@ class TAS(dict):
         if label is None:
             label = tile.tilename
         if label in self:
-            raise ValueError('Tile labes must be unique')
+            raise ValueError('Tile labels must be unique')
         self.__setitem__(label, tile)
 
     tilestring = textwrap.dedent("""\
@@ -145,8 +146,8 @@ class TAS(dict):
     WESTLABEL {west_label}
     TILECOLOR rgb({color_red}, {color_green}, {color_blue})
     CREATE
-    
-    
+
+
     """)
 
     def printTiles(self):
@@ -167,3 +168,61 @@ class TAS(dict):
         with open(path, 'w') as ff:
             ff.write(self.printTiles())
             print("TAS written to {0}.".format(path))
+
+    @classmethod
+    def parseFromFile(cls, inputFile):
+        """Get the TAS described by the given .tds file"""
+        ret = cls()
+        inTile = False
+        for line in inputFile:
+            if inTile:
+                if line.startswith("LABEL"):
+                    label = line[6:-1]
+                elif line.startswith("NORTHBIND"):
+                    northbind = line[10:-1]
+                elif line.startswith("EASTBIND"):
+                    eastbind = line[9:-1]
+                elif line.startswith("SOUTHBIND"):
+                    southbind = line[10:-1]
+                elif line.startswith("WESTBIND"):
+                    westbind = line[9:-1]
+                elif line.startswith("NORTHLABEL"):
+                    northlabel = line[11:-1]
+                elif line.startswith("EASTLABEL"):
+                    eastlabel = line[10:-1]
+                elif line.startswith("SOUTHLABEL"):
+                    southlabel = line[11:-1]
+                elif line.startswith("WESTLABEL"):
+                    westlabel = line[10:-1]
+                elif line.startswith("TILECOLOR"):
+                    tilecolor = line[10:-1]
+                elif line == "CREATE\n":
+                    # TODO: Handle colornames instead of only rgb values.
+                    colors = re.match(r'rgb\((\d+),\s*(\d+),\s*(\d+)\)', tilecolor).groups()
+                    if len(colors) != 3:
+                        tilecolor = [255, 0, 0]
+                    else:
+                        tilecolor = [int(colors[0]), int(colors[1]), int(colors[2])]
+
+                    north = Glue(northlabel, int(northbind))
+                    east = Glue(eastlabel, int(eastbind))
+                    south = Glue(southlabel, int(southbind))
+                    west = Glue(westlabel, int(westbind))
+
+                    try:
+                        ret.addTile(Tile(tilename, tilecolor, [north, east, south, west]), label)
+                    except Error:
+                        raise ValueError("Invalid .tds file.")
+                    inTile = False
+
+            # If not inTile
+            else:
+                if line == "\n":
+                    continue
+                if line.startswith("TILENAME"):
+                    inTile = True
+                    tilename = line[9:-1]
+
+                else:
+                    raise ValueError("Invalid file given")
+        return ret

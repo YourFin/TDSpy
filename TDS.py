@@ -169,6 +169,7 @@ class TAS(dict):
             ff.write(self.printTiles())
             print("TAS written to {0}.".format(path))
 
+    @staticmethod
     def parseFromFile(path):
         """Get the TAS described by the given .tds file"""
         ret = TAS()

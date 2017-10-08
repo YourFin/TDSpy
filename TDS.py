@@ -38,7 +38,7 @@ class Glue:
 
     def __repr__(self):
         return "<" + self.__str__() + ">"
-            
+
 blank_glue = Glue("", 1)
 
 class Tile:
@@ -129,7 +129,7 @@ class TAS(dict):
         if label is None:
             label = tile.tilename
         if label in self:
-            raise ValueError('Tile labes must be unique')
+            raise ValueError('Tile labels must be unique')
         self.__setitem__(label, tile)
 
     tilestring = textwrap.dedent("""\
@@ -145,8 +145,8 @@ class TAS(dict):
     WESTLABEL {west_label}
     TILECOLOR rgb({color_red}, {color_green}, {color_blue})
     CREATE
-    
-    
+
+
     """)
 
     def printTiles(self):

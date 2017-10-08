@@ -2,6 +2,7 @@
 
 import textwrap
 import copy
+import re
 
 class Glue:
     """A TAS side glue"""
@@ -167,3 +168,60 @@ class TAS(dict):
         with open(path, 'w') as ff:
             ff.write(self.printTiles())
             print("TAS written to {0}.".format(path))
+
+    def parseFromFile(path):
+        """Get the TAS described by the given .tds file"""
+        ret = TAS()
+        with open(path, 'r') as ff:
+            while 1:
+                line = ff.readline()
+                if not line:
+                    break
+                if line == "\n":
+                    continue
+                if line.startswith("TILENAME"):
+                    ret.__addTileFromStream__(ff, line)
+                else:
+                    raise ValueError("Invalid file given")
+        return ret
+
+    def __addTileFromStream__(self, ff, nameline):
+        tilename = nameline[9:-1]
+        while 1:
+            line = ff.readline()
+            if line.startswith("LABEL"):
+                label = line[6:-1]
+            elif line.startswith("NORTHBIND"):
+                northbind = line[10:-1]
+            elif line.startswith("EASTBIND"):
+                eastbind = line[9:-1]
+            elif line.startswith("SOUTHBIND"):
+                southbind = line[10:-1]
+            elif line.startswith("WESTBIND"):
+                westbind = line[9:-1]
+            elif line.startswith("NORTHLABEL"):
+                northlabel = line[11:-1]
+            elif line.startswith("EASTLABEL"):
+                eastlabel = line[10:-1]
+            elif line.startswith("SOUTHLABEL"):
+                southlabel = line[11:-1]
+            elif line.startswith("WESTLABEL"):
+                westlabel = line[10:-1]
+            elif line.startswith("TILECOLOR"):
+                tilecolor = line[10:-1]
+            elif line == "CREATE\n":
+                break
+
+        # TODO: Handle colornames instead of only rgb values.
+        colors = re.match(r'rgb\((\d+),\s*(\d+),\s*(\d+)\)', tilecolor).groups()
+        if len(colors) != 3:
+            tilecolor = [255, 0, 0]
+        else:
+            tilecolor = [int(colors[0]), int(colors[1]), int(colors[2])]
+
+        north = Glue(northlabel, int(northbind))
+        east = Glue(eastlabel, int(eastbind))
+        south = Glue(southlabel, int(southbind))
+        west = Glue(westlabel, int(westbind))
+
+        self.addTile(Tile(tilename, tilecolor, [north, east, south, west]), label)

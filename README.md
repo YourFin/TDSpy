@@ -104,6 +104,8 @@ The `TAS` class is a subclass of the built-in `dict` class, and as such any oper
 
 `void printToFile(str path)`: Writes the tileset to the file at path. Overwrites, not appends
 
+`TAS parseFromFile(str path)`: Attempts to parse an existing .tds file at the path, and returns a TAS object containing all the info obtained.
+
 
 ## Licence
 Mit
